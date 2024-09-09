@@ -21,19 +21,14 @@ export class cart {
   removeProduct({id}) {
     const productIndex = this.data.findIndex((product) => product.id === id);
     this.data.splice(productIndex, 1);
-
-    //update state
   }
   changeQuantity(id, numberToChange) {
     const productIndex = this.data.findIndex((product) => product.id === id);
-    console.log(productIndex);
     if(this.data[productIndex].quantity + numberToChange <= 0 || this.data[productIndex].quantity <= 0) {
       this.removeProduct(id);
     } else {
       this.data[productIndex].quantity += numberToChange;
     }
-
-    //update state
   }
   calculatePrice() {
     const productsPrice = this.data.reduce(

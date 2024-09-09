@@ -1,5 +1,4 @@
 import { cart } from "./cart.js";
-import { product } from "./product.js";
 import { FETCH_BASE_URL } from "./constansts.js";
 import { fetchProducts } from "./fetchProducts.js";
 
@@ -67,7 +66,7 @@ class domApp {
                     <input type="number" class="cart-modal__item-quantity" value="${product.quantity}" min="1">
                     <button class="cart-modal__item-increment">+</button>
                 </div>
-                <span class="cart-modal__item-price">${product.price * product.quantity}</span>
+                <span class="cart-modal__item-price">${(product.price * product.quantity).toFixed(2)}</span>
                 <button class="cart-modal__item-remove">Remove</button>
             </li>`;
   }
@@ -156,7 +155,3 @@ class domApp {
 const shop = new domApp('catalog__list', 'product-cart-list', 'cart-total', 'cart-total-header');
 
 shop.setProductsData();
-
-
-
-
