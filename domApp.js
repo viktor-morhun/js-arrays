@@ -29,6 +29,7 @@ class domApp {
     const listElement = document.getElementById(this.listId);
     listElement.innerHTML = productsList
     .map(this.renderProduct).join('');
+    document.removeEventListener('click', this.addProductToCart);
     this.addEventListeners();
   }
 
@@ -39,6 +40,8 @@ class domApp {
     .map(this.renderCartProduct).join('');
     productCart.calculatePrice();
     productsPriceElement.innerHTML = productCart.calculatePrice().price.toFixed(2);
+    document.removeEventListener('click', this.changeProductsCart);
+    this.addCartEventListeners();
   }
 
   renderProduct({id, title, price, image}) {
@@ -57,7 +60,7 @@ class domApp {
   }
 
   renderCartProduct(product) {
-    return `<li class="cart-modal__item">
+    return `<li class="cart-modal__item" data-id="${product.id}">
                 <span class="cart-modal__item-name">${product.title}</span>
                 <div class="cart-modal__item-quantity-control">
                     <button class="cart-modal__item-decrement">-</button>
@@ -69,7 +72,7 @@ class domApp {
             </li>`;
   }
 
-  productsSortBy() {
+  productsSortBy(event) {
     if (event.target.value === 'name'){
       const sortedProductsData = this.productsData
       .toSorted((a, b) => {
@@ -84,23 +87,20 @@ class domApp {
         }
         return 0;
       })
-      document.removeEventListener('click', this.handler);
       this.renderProductsList(sortedProductsData);
     } else if(event.target.value === 'price'){
       const sortedProductsData = this.productsData
       .toSorted((a, b) => {
         return a.price - b.price;
       })
-      document.removeEventListener('click', this.handler);
       this.renderProductsList(sortedProductsData);
     } else {
-      document.removeEventListener('click', this.handler);
       this.renderProductsList();
     }
     
   }
 
-  handler = (event) => {
+  addProductToCart = (event) => {
     if(event.target.className === 'catalog__item-add-to-cart') {
       const elementId = Number(event.target.dataset.id);
       const productToCart = this.productsData.find(({id}) => id === elementId);
@@ -123,12 +123,32 @@ class domApp {
       cartElement.classList.remove('hidden-element');
     });
 
-
-
-    document.addEventListener('click', this.handler);
-
+    document.addEventListener('click', this.addProductToCart);
     const sortByElement = document.getElementById('sort-select');
     sortByElement.addEventListener('change', (event) => this.productsSortBy(event));
+  }
+
+
+
+  //inside cart methods
+  changeProductsCart = (event) => {
+    if (event.target.className === 'cart-modal__item-remove') {
+      const productElementId = Number(event.target.parentElement.dataset.id);
+      productCart.removeProduct(productElementId);
+      this.renderCart();
+    } else if (event.target.className === 'cart-modal__item-increment') {
+      const productElementId = Number(event.target.parentElement.parentElement.dataset.id);
+      productCart.changeQuantity(productElementId, 1);
+      this.renderCart();
+    } else if (event.target.className === 'cart-modal__item-decrement') {
+      const productElementId = Number(event.target.parentElement.parentElement.dataset.id);
+      productCart.changeQuantity(productElementId, -1);
+      this.renderCart();
+    }
+  }
+
+  addCartEventListeners() {
+    document.addEventListener('click', this.changeProductsCart);
   }
 
 }

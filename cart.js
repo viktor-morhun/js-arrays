@@ -24,11 +24,13 @@ export class cart {
 
     //update state
   }
-  changeQuantity(product, numberToChange) {
-    if(product.quantity + numberToChange <= 0 || product.quantity <= 0) {
-      this.removeProduct(product);
+  changeQuantity(id, numberToChange) {
+    const productIndex = this.data.findIndex((product) => product.id === id);
+    console.log(productIndex);
+    if(this.data[productIndex].quantity + numberToChange <= 0 || this.data[productIndex].quantity <= 0) {
+      this.removeProduct(id);
     } else {
-      product.quantity += numberToChange;
+      this.data[productIndex].quantity += numberToChange;
     }
 
     //update state
