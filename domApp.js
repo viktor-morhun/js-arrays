@@ -146,10 +146,20 @@ class domApp {
     }
   }
 
-  addCartEventListeners() {
-    document.addEventListener('click', this.changeProductsCart);
+  changeProductsQuantity = (event) => {
+    if (event.target.className === 'cart-modal__item-quantity') {
+      const productElementId = Number(event.target.parentElement.parentElement.dataset.id);
+      const productIndex = productCart.data.findIndex((product) => product.id === productElementId);
+      const numberToChange = Number(event.target.value) - productCart.data[productIndex].quantity;
+      productCart.changeQuantity(productElementId, numberToChange);
+      this.renderCart();
+    }
   }
 
+  addCartEventListeners() {
+    document.addEventListener('click', this.changeProductsCart);
+    document.addEventListener('change', this.changeProductsQuantity);
+  }
 }
 
 const shop = new domApp('catalog__list', 'product-cart-list', 'cart-total', 'cart-total-header');
