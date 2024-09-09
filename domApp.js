@@ -84,17 +84,31 @@ class domApp {
         }
         return 0;
       })
-
+      document.removeEventListener('click', this.handler);
       this.renderProductsList(sortedProductsData);
     } else if(event.target.value === 'price'){
       const sortedProductsData = this.productsData
       .toSorted((a, b) => {
         return a.price - b.price;
       })
-
+      document.removeEventListener('click', this.handler);
       this.renderProductsList(sortedProductsData);
     } else {
+      document.removeEventListener('click', this.handler);
       this.renderProductsList();
+    }
+    
+  }
+
+  handler = (event) => {
+    if(event.target.className === 'catalog__item-add-to-cart') {
+      const elementId = Number(event.target.dataset.id);
+      const productToCart = this.productsData.find(({id}) => id === elementId);
+      productCart.addProduct(productToCart);
+      const headerTotalPriceElement = document.getElementById(this.headerTotalPriceId);
+      const cartQuantityElement = document.getElementById('cart-quantity-header');
+      headerTotalPriceElement.innerHTML = productCart.calculatePrice().price.toFixed(2);
+      cartQuantityElement.innerHTML = productCart.calculatePrice().quantity;
     }
   }
 
@@ -109,17 +123,9 @@ class domApp {
       cartElement.classList.remove('hidden-element');
     });
 
-    document.addEventListener('click', (event) => {
-      if(event.target.className === 'catalog__item-add-to-cart') {
-        const elementId = Number(event.target.dataset.id);
-        const productToCart = this.productsData.find(({id}) => id === elementId);
-        productCart.addProduct(productToCart);
-        const headerTotalPriceElement = document.getElementById(this.headerTotalPriceId);
-        const cartQuantityElement = document.getElementById('cart-quantity-header');
-        headerTotalPriceElement.innerHTML = productCart.calculatePrice().price.toFixed(2);
-        cartQuantityElement.innerHTML = productCart.calculatePrice().quantity;
-      }
-    });
+
+
+    document.addEventListener('click', this.handler);
 
     const sortByElement = document.getElementById('sort-select');
     sortByElement.addEventListener('change', (event) => this.productsSortBy(event));
