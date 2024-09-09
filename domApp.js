@@ -68,12 +68,36 @@ class domApp {
                 <button class="cart-modal__item-remove">Remove</button>
             </li>`;
   }
+
   productsSortBy() {
-    console.log('bruh');
-    if(this.target.value === 'name'){
-      console.log('bruh');
+    if (event.target.value === 'name'){
+      const sortedProductsData = this.productsData
+      .toSorted((a, b) => {
+        const nameA = a.title.toUpperCase();
+        const nameB = b.title.toUpperCase();
+
+        if (nameA > nameB) {
+          return 1;
+        }
+        if (nameA < nameB) {
+          return -1;
+        }
+        return 0;
+      })
+
+      this.renderProductsList(sortedProductsData);
+    } else if(event.target.value === 'price'){
+      const sortedProductsData = this.productsData
+      .toSorted((a, b) => {
+        return a.price - b.price;
+      })
+
+      this.renderProductsList(sortedProductsData);
+    } else {
+      this.renderProductsList();
     }
   }
+
   addEventListeners() {
     const cartIconElement = document.getElementById('product-cart-icon');
     const closeCartElement = document.getElementById('close-cart-button');
@@ -94,11 +118,11 @@ class domApp {
         const cartQuantityElement = document.getElementById('cart-quantity-header');
         headerTotalPriceElement.innerHTML = productCart.calculatePrice().price.toFixed(2);
         cartQuantityElement.innerHTML = productCart.calculatePrice().quantity;
-
-        const sortByElement = document.getElementById('sort-select');
-        sortByElement.addEventListener('change', this.productsSortBy);
       }
     });
+
+    const sortByElement = document.getElementById('sort-select');
+    sortByElement.addEventListener('change', (event) => this.productsSortBy(event));
   }
 
 }
