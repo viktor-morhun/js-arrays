@@ -1,6 +1,14 @@
 export async function fetchProducts(productsLink) {
-  const promise = await fetch(productsLink);
-  const productsData = await promise.json();
-  console.log(productsData);
-  return productsData.map(product => product);
+  try {
+    const response = await fetch(productsLink);
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status} - ${response.statusText}`);
+    }
+    const productsData = await response.json();
+
+    return productsData;
+  } catch (error) {
+    console.error(`Failed to fetch products:`, error);
+    return [];
+  }
 }
