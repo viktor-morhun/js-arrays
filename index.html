@@ -5,9 +5,46 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HW - Arrays</title>
   <link rel="stylesheet" href="style.css">
-  <script src="script.js"></script>
+  <script defer type="module" src="domApp.js"></script>
 </head>
 <body>
-  
+  <header class="header">
+    <h1 class="header__title">Online Shop</h1>
+    <div class="header__cart" id="product-cart-icon">
+        <span class="header__cart-icon">🛒</span>
+        <span class="header__cart-quantity" id="cart-quantity-header">0</span>
+        <span class="header__cart-total" id="cart-total-header">0.00</span>
+    </div>
+  </header>
+
+  <div class="sort-options">
+    <label for="sort-select" class="sort-options__label">Sort by:</label>
+    <select id="sort-select" class="sort-options__select">
+        <option value="default">Default</option>
+        <option value="name">Name</option>
+        <option value="price">Price</option>
+    </select>
+  </div>
+
+  <section class="catalog">
+    <ul class="catalog__list" id="catalog__list">
+    </ul>
+  </section>
+
+  <div id="product-cart" class="cart-modal hidden-element">
+    <div class="cart-modal__content" id="cart-content">
+        <h2 class="cart-modal__title">Your Cart</h2>
+        <ul class="cart-modal__list" id="product-cart-list">
+        </ul>
+        <div class="cart-modal__summary">
+          <p class="cart-modal__total">Total: $<span id="cart-total">00.00</span></p>
+        </div>
+        <div class="cart-modal__buttons">
+          <button class="cart-modal__close-button" id="close-cart-button">Continue shopping</button>
+          <button class="cart-modal__checkout-button">Checkout</button>
+        </div>
+    </div>
+  </div>
+
 </body>
 </html>
